@@ -99,7 +99,7 @@ The explorer displays all blocks in the chain. Each block shows:
 - Block hash
 - Previous block hash
 
-![Alt text](path/to/Demonstration.png "New transactions added!")
+![Alt text](Demonstration.png "New transactions added!")
 
 
 **Component Definitions:**
