@@ -1,2 +1,8 @@
 # Mark Python as the main language
 *.py linguist-language=Python
+
+# Exclude HTML from language statistics
+*.html linguist-vendored
+
+# Exclude templates directory
+templates/* linguist-vendored
