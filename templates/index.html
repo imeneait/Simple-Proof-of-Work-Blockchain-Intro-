@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Educational Blockchain Simulator</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        
+        h1 {
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            transition: transform 0.2s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-value {
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+        
+        .section {
+            margin: 30px 0;
+            padding: 20px;
+            background: #f8f9ff;
+            border-radius: 8px;
+        }
+        
+        .section h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+        
+        .transaction-form {
+            display: grid;
+            gap: 10px;
+            max-width: 600px;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        
+        input {
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background 0.3s, transform 0.1s;
+            margin: 5px;
+        }
+        
+        button:hover {
+            background: #5568d3;
+        }
+        
+        button:active {
+            transform: scale(0.98);
+        }
+        
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .block {
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            background: white;
+            transition: box-shadow 0.3s;
+        }
+        
+        .block:hover {
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .block-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e7ff;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .block-info {
+            margin: 10px 0;
+            font-size: 0.95em;
+        }
+        
+        .block-info strong {
+            color: #667eea;
+        }
+        
+        .hash {
+            font-family: 'Courier New', monospace;
+            background: #e0e7ff;
+            padding: 8px;
+            border-radius: 4px;
+            word-break: break-all;
+            font-size: 0.85em;
+            display: block;
+            margin-top: 5px;
+        }
+        
+        .transaction {
+            background: #f0f4ff;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 4px;
+            border-left: 3px solid #667eea;
+        }
+        
+        .valid { 
+            color: #22c55e;
+            font-weight: bold;
+        }
+        
+        .invalid { 
+            color: #ef4444;
+            font-weight: bold;
+        }
+        
+        .message {
+            padding: 15px;
+            border-radius: 6px;
+            margin: 10px 0;
+            display: none;
+        }
+        
+        .message.success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #10b981;
+        }
+        
+        .message.error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #ef4444;
+        }
+        
+        .pending-transactions {
+            background: #fff7ed;
+            border: 2px solid #fb923c;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .pending-transactions h3 {
+            color: #fb923c;
+            margin-bottom: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔗 Educational Blockchain Simulator</h1>
+        <p class="subtitle">Learn how blockchain works in real-time!</p>
+        
+        <div id="message" class="message"></div>
+        
+        <div id="stats" class="stats"></div>
+        
+        <div class="section">
+            <h2>💸 Create Transaction</h2>
+            <div class="transaction-form">
+                <div class="form-row">
+                    <input type="text" id="sender" placeholder="Sender Address (e.g., Alice)" />
+                    <input type="text" id="receiver" placeholder="Receiver Address (e.g., Bob)" />
+                </div>
+                <input type="number" id="amount" placeholder="Amount" min="0.01" step="0.01" />
+                <button onclick="createTransaction()"> Send Transaction</button>
+            </div>
+        </div>
+        
+        <div id="pendingSection" class="pending-transactions" style="display: none;">
+            <h3>⏳ Pending Transactions</h3>
+            <div id="pendingTransactions"></div>
+        </div>
+        
+        <div class="section">
+            <h2>⛏️ Mining Controls</h2>
+            <div class="button-group">
+                <button onclick="mineBlock()">⛏️ Mine Block Now</button>
+                <button id="autoMineBtn" onclick="toggleAutoMine()">🔄 Start Auto-Mining</button>
+                <button onclick="validateChain()">✓ Validate Blockchain</button>
+                <button onclick="checkBalance()">💰 Check Balance</button>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2> Blockchain Explorer</h2>
+            <div id="blockchain"></div>
+        </div>
+    </div>
+
+    <script>
+        let autoMining = false;
+        
+        function showMessage(text, type = 'success') {
+            const msg = document.getElementById('message');
+            msg.textContent = text;
+            msg.className = `message ${type}`;
+            msg.style.display = 'block';
+            setTimeout(() => {
+                msg.style.display = 'none';
+            }, 3000);
+        }
+        
+        function updateData() {
+            fetch('/get_chain')
+                .then(r => r.json())
+                .then(data => {
+                    displayStats(data.stats);
+                    displayBlockchain(data.chain);
+                    displayPendingTransactions(data.pending);
+                })
+                .catch(err => {
+                    console.error('Error fetching data:', err);
+                });
+        }
+        
+        function displayStats(stats) {
+            document.getElementById('stats').innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-value">${stats.total_blocks}</div>
+                    <div class="stat-label">📦 Total Blocks</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${stats.total_transactions}</div>
+                    <div class="stat-label"> Total Transactions</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${stats.pending_transactions}</div>
+                    <div class="stat-label">⏳ Pending</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${stats.difficulty}</div>
+                    <div class="stat-label">🔧 Difficulty</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${stats.average_mining_time}s</div>
+                    <div class="stat-label">⏱️ Avg Mine Time</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value ${stats.is_valid ? 'valid' : 'invalid'}">
+                        ${stats.is_valid ? '✓' : '✗'}
+                    </div>
+                    <div class="stat-label"> Chain Valid</div>
+                </div>
+            `;
+        }
+        
+        function displayPendingTransactions(pending) {
+            const section = document.getElementById('pendingSection');
+            const container = document.getElementById('pendingTransactions');
+            
+            if (pending && pending.length > 0) {
+                section.style.display = 'block';
+                container.innerHTML = pending.map(tx => `
+                    <div class="transaction">
+                        <strong>${tx.sender}</strong> → <strong>${tx.receiver}</strong>: ${tx.amount} coins
+                        <div style="font-size: 0.85em; color: #666; margin-top: 5px;">
+                            ${new Date(tx.timestamp * 1000).toLocaleString()}
+                        </div>
+                    </div>
+                `).join('');
+            } else {
+                section.style.display = 'none';
+            }
+        }
+        
+        function displayBlockchain(chain) {
+            const html = chain.slice().reverse().map(block => `
+                <div class="block">
+                    <div class="block-header">
+                        <span>📦 Block #${block.index}</span>
+                        <span>🕒 ${new Date(block.timestamp * 1000).toLocaleString()}</span>
+                    </div>
+                    
+                    <div class="block-info">
+                        <strong>Transactions:</strong> ${block.transactions.length}
+                    </div>
+                    
+                    ${block.transactions.map(tx => `
+                        <div class="transaction">
+                            <strong>${tx.sender}</strong> → <strong>${tx.receiver}</strong>: <strong>${tx.amount}</strong> coins
+                        </div>
+                    `).join('')}
+                    
+                    <div class="block-info">
+                        <strong>Proof:</strong> ${block.proof}
+                    </div>
+                    
+                    <div class="block-info">
+                        <strong>Hash:</strong>
+                        <span class="hash">${block.hash}</span>
+                    </div>
+                    
+                    <div class="block-info">
+                        <strong>Previous Hash:</strong>
+                        <span class="hash">${block.previous_hash}</span>
+                    </div>
+                </div>
+            `).join('');
+            
+            document.getElementById('blockchain').innerHTML = html || '<p>No blocks yet...</p>';
+        }
+        
+        function createTransaction() {
+            const sender = document.getElementById('sender').value.trim();
+            const receiver = document.getElementById('receiver').value.trim();
+            const amount = document.getElementById('amount').value;
+            
+            if (!sender || !receiver || !amount) {
+                showMessage(' Please fill in all fields!', 'error');
+                return;
+            }
+            
+            if (parseFloat(amount) <= 0) {
+                showMessage(' Amount must be greater than 0!', 'error');
+                return;
+            }
+            
+            fetch('/add_transaction', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    sender: sender,
+                    receiver: receiver,
+                    amount: parseFloat(amount)
+                })
+            })
+            .then(r => r.json())
+            .then(data => {
+                showMessage(`✅ ${data.message}`, 'success');
+                updateData();
+                document.getElementById('sender').value = '';
+                document.getElementById('receiver').value = '';
+                document.getElementById('amount').value = '';
+            })
+            .catch(err => {
+                showMessage(' Error creating transaction!', 'error');
+                console.error(err);
+            });
+        }
+        
+        function mineBlock() {
+            showMessage('⛏️ Mining in progress...', 'success');
+            
+            fetch('/mine_block', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({miner: 'WebMiner'})
+            })
+            .then(r => r.json())
+            .then(data => {
+                showMessage(`✅ ${data.message}`, 'success');
+                updateData();
+            })
+            .catch(err => {
+                showMessage(' Mining failed!', 'error');
+                console.error(err);
+            });
+        }
+        
+        function toggleAutoMine() {
+            autoMining = !autoMining;
+            const btn = document.getElementById('autoMineBtn');
+            
+            fetch('/toggle_auto_mine', {method: 'POST'})
+                .then(r => r.json())
+                .then(data => {
+                    if (data.auto_mining) {
+                        btn.textContent = '⏸️ Stop Auto-Mining';
+                        showMessage('✅ Auto-mining started!', 'success');
+                    } else {
+                        btn.textContent = '🔄 Start Auto-Mining';
+                        showMessage('⏸️ Auto-mining stopped!', 'success');
+                    }
+                });
+        }
+        
+        function validateChain() {
+            fetch('/validate_chain')
+                .then(r => r.json())
+                .then(data => {
+                    if (data.valid) {
+                        showMessage('✅ Blockchain is VALID!', 'success');
+                    } else {
+                        showMessage('Blockchain is INVALID!', 'error');
+                    }
+                });
+        }
+        
+        function checkBalance() {
+            const address = prompt('Enter address to check balance:');
+            if (address) {
+                fetch(`/get_balance/${address}`)
+                    .then(r => r.json())
+                    .then(data => {
+                        showMessage(`💰 Balance of ${data.address}: ${data.balance} coins`, 'success');
+                    });
+            }
+        }
+        
+        // Auto-update every 2 seconds
+        setInterval(updateData, 2000);
+        
+        // Initial load
+        updateData();
+        
+        // Allow Enter key to submit transaction
+        document.getElementById('amount').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                createTransaction();
+            }
+        });
+    </script>
+</body>
+</html>
