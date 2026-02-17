@@ -1,4 +1,4 @@
-# Introductory Educational Blockchain Simulator with UI
+# Introductory Educational Blockchain Simulator with Dashboard Visualisation
 
 A simple, visual blockchain simulator designed to help learnning how cryptocurrency and blockchain technology works.
 
@@ -15,7 +15,7 @@ This beginner-friendly blockchain application runs on your local computer. It de
 
 ---
 
-## Installation and Setup
+## Setup
 
 Install the required dependencies:
 
@@ -33,7 +33,7 @@ Access the interface at: http://localhost:5000
 
 ---
 
-## User Interface Guide
+## UI Guide
 
 ### Dashboard Metrics
 
